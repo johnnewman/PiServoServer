@@ -2,9 +2,10 @@ import RPi.GPIO as GPIO
 from threading import Thread
 import time
 
+WAIT_TIME = 0.75  # sec
 PWM_FREQUENCY = 50  # Hz
 MAX_PULSE_WIDTH = 2.5  # ms
-MIN_PULSE_WIDTH = 1.0  # ms
+MIN_PULSE_WIDTH = 0.5  # ms
 
 
 class Servo(Thread):
@@ -25,6 +26,7 @@ class Servo(Thread):
             pwm = GPIO.PWM(self.__pwm_pin, PWM_FREQUENCY)
             pwm.start(duty_cycle)
             time.sleep(0.5)
+            time.sleep(WAIT_TIME)
             pwm.stop()
         finally:
             GPIO.cleanup()
