@@ -49,3 +49,4 @@ class ServoServer(Thread):
                     time.sleep(TIMEOUT)
         except Exception as e:
             # print('Server exception %s' % e.message)
+            return
