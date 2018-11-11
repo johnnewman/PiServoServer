@@ -45,7 +45,7 @@ class ServoServer(Thread):
                     client_socket.shutdown(socket.SHUT_RDWR)
                     client_socket.close()
                 except Exception as e:
-                    print('Socket exception %s' % e.message)
+                    # print('Socket exception %s' % e.message)
                     time.sleep(TIMEOUT)
         except Exception as e:
-            print('Server exception %s' % e.message)
+            # print('Server exception %s' % e.message)
