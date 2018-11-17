@@ -5,7 +5,7 @@ import time
 from threading import Thread
 import Queue
 
-TIMEOUT = 0.5
+ERROR_TIMEOUT = 0.5  # Seconds to wait after a client socket error.
 
 
 class ServoServer(Thread):
@@ -47,7 +47,7 @@ class ServoServer(Thread):
                     client_socket.close()
                 except Exception as e:
                     # print('Socket exception %s' % e.message)
-                    time.sleep(TIMEOUT)
+                    time.sleep(ERROR_TIMEOUT)
         except Exception as e:
             # print('Server exception %s' % e.message)
             return
