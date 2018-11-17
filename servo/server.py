@@ -3,6 +3,7 @@ import servo
 import socket
 import time
 from threading import Thread
+import Queue
 
 TIMEOUT = 0.5
 
@@ -30,7 +31,8 @@ class ServoServer(Thread):
         try:
             server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             server_socket.bind(('127.0.0.1', self.__port))
-
+            servo_queue = ServoQueue()
+            servo_queue.start()
             while True:
                 try:
                     server_socket.listen(2)
@@ -40,8 +42,7 @@ class ServoServer(Thread):
                     if re_result:
                         pin = int(re_result.group('pin'))
                         angle = int(re_result.group('angle'))
-                        servo.Servo(pin, angle).start()
-
+                        servo_queue.add_servo(servo.Servo(pin, angle))
                     client_socket.shutdown(socket.SHUT_RDWR)
                     client_socket.close()
                 except Exception as e:
@@ -50,3 +51,24 @@ class ServoServer(Thread):
         except Exception as e:
             # print('Server exception %s' % e.message)
             return
+
+
+class ServoQueue(Thread):
+    """
+    A thread class that manages the servos in a queue. Allows only one servo to
+    run at a time.
+    """
+    
+    def __init__(self):
+        self.__queue = Queue.Queue()
+        super(ServoQueue, self).__init__()
+
+    def add_servo(self, srvo):
+        self.__queue.put(srvo)
+
+    def run(self):
+        while True:
+            srvo = self.__queue.get()
+            srvo.start()
+            while srvo.is_alive():
+                time.sleep(0.1)
