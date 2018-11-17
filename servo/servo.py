@@ -18,11 +18,11 @@ class Servo(Thread):
         try:
             GPIO.setmode(GPIO.BOARD)
             percentage = max(0.0, min(1.0, self.__angle/180.0))
-            pulse_width = (MIN_PULSE_WIDTH + ((MAX_PULSE_WIDTH - MIN_PULSE_WIDTH) * percentage)) / 1000.0
-            duty_cycle = pulse_width * PWM_FREQUENCY * 100
+            pulse_width = (MIN_PULSE_WIDTH + ((MAX_PULSE_WIDTH - MIN_PULSE_WIDTH) * percentage)) / 1000.0  # in seconds
+            duty_cycle = pulse_width * PWM_FREQUENCY
             GPIO.setup(self.__pwm_pin, GPIO.OUT)
             pwm = GPIO.PWM(self.__pwm_pin, PWM_FREQUENCY)
-            pwm.start(duty_cycle)
+            pwm.start(duty_cycle * 100)
             time.sleep(WAIT_TIME)
             pwm.stop()
         finally:
