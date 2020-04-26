@@ -1,9 +1,9 @@
 import re
-import servo
+from servo.servo import Servo
 import socket
 import time
 from threading import Thread
-import Queue
+import queue
 
 ERROR_TIMEOUT = 0.5  # Seconds to wait after a client socket error.
 
@@ -36,20 +36,20 @@ class ServoServer(Thread):
             while True:
                 try:
                     server_socket.listen(2)
-                    client_socket, address = server_socket.accept()
-                    message = client_socket.recv(2048)
+                    client_socket, _ = server_socket.accept()
+                    message = client_socket.recv(2048).decode("utf-8")
                     re_result = re.match('^(?P<pin>[0-9]+) (?P<angle>[0-9]{1,3})$', message)
                     if re_result:
                         pin = int(re_result.group('pin'))
                         angle = int(re_result.group('angle'))
-                        servo_queue.add_servo(servo.Servo(pin, angle))
+                        servo_queue.add_servo(Servo(pin, angle))
                     client_socket.shutdown(socket.SHUT_RDWR)
                     client_socket.close()
                 except Exception as e:
-                    # print('Socket exception %s' % e.message)
+                    # print('Socket exception %s' % e)
                     time.sleep(ERROR_TIMEOUT)
         except Exception as e:
-            # print('Server exception %s' % e.message)
+            # print('Server exception %s' % e)
             return
 
 
@@ -60,7 +60,7 @@ class ServoQueue(Thread):
     """
     
     def __init__(self):
-        self.__queue = Queue.Queue()
+        self.__queue = queue.Queue()
         super(ServoQueue, self).__init__()
 
     def add_servo(self, srvo):
