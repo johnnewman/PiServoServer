@@ -6,5 +6,6 @@ Commands can be sent to port `9338` if you use the `servo` package's  `__main__.
 
 Try it with Netcat:
 ```Shell
+python3 servo &
 echo "7 90" | nc 127.0.0.1 9338
 ```
