@@ -1,5 +1,5 @@
 import re
-from servo.servo import Servo
+from servo import Servo
 import socket
 import time
 from threading import Thread
@@ -46,10 +46,10 @@ class ServoServer(Thread):
                     client_socket.shutdown(socket.SHUT_RDWR)
                     client_socket.close()
                 except Exception as e:
-                    # print('Socket exception %s' % e)
+                    print('Socket exception %s' % e)
                     time.sleep(ERROR_TIMEOUT)
         except Exception as e:
-            # print('Server exception %s' % e)
+            print('Server exception %s' % e)
             return
 
 

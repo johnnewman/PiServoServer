@@ -1,0 +1,11 @@
+[Unit]
+Description=Python program that runs a local servo server.
+After=network.target
+
+[Service]
+User=<user>
+WorkingDirectory=<path>
+ExecStart=<path>/venv/bin/python <path>/servo
+
+[Install]
+WantedBy=multi-user.target
